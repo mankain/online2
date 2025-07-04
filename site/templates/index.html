@@ -8,7 +8,7 @@
 <body class="p-4">
 <div class="container">
 
-    <h1 class="mb-4">Профиль пользователя</h1>
+    <h1 class="mb-4">Профиль пользователя - <strong>{{ username }}</strong></h1>
     <p>Команда №{{ team_num }}</p>
     <p>Роль: <strong>{{ user_role }}</strong></p>
 
@@ -61,9 +61,14 @@
 
     <form method="post" action="/save_report">
         <button type="submit" class="btn btn-primary mt-3">Сохранить отчёт</button>
+        {% if user_role == 'admin' %}
+        <a href="/admin" class="btn btn-primary mt-3 ms-2">Админ-панель</a>
+        {% endif %}
         <a href="/old_reports" class="btn btn-secondary mt-3 ms-2">Старые отчёты</a>
         <a href="/change_password" class="btn btn-warning mt-3 ms-2">Сменить пароль</a>
         <a href="/logout" class="btn btn-danger mt-3 ms-2">Выйти</a>
+        
+
     </form>
 
 </div>
