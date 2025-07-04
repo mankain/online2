@@ -157,7 +157,7 @@ def profile():
     report = format_report(players, data)
     user = users_col.find_one({"username": session["user"]})
     role = user.get("role", "user") if user else "user"
-    return render_template("index.html", report=report, team_num=team_id, error="", user_role=role)
+    return render_template("index.html", report=report, team_num=team_id, error="", user_role=role, username=session["user"])
 
 @app.route("/logout")
 def logout():
