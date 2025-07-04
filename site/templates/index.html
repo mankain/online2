@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <title>Профиль пользователя - Команда №{{ team_num }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body class="p-4">
+<div class="container">
+
+    <h1 class="mb-4">Профиль пользователя</h1>
+    <p>Команда №{{ team_num }}</p>
+    <p>Роль: <strong>{{ user_role }}</strong></p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Закрыть"></button>
+        </div>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+    {% else %}
+        {% if report %}
+            <!-- Пытаемся распарсить report строку в таблицу -->
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Роль</th>
+                        <th>Ник</th>
+                        <th>Сессия</th>
+                        <th>Месяц</th>
+                        <th>Дата</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {# Разобьём report по строкам и выведем по колонкам #}
+                {% for line in report.split('\n')[2:] %}  {# пропускаем заголовок и разделитель #}
+                    {% if line.strip() %}
+                    {% set cols = line.split('|') %}
+                    <tr>
+                        <td>{{ cols[0].strip() }}</td>
+                        <td>{{ cols[1].strip() }}</td>
+                        <td>{{ cols[2].strip() }}</td>
+                        <td>{{ cols[3].strip() }}</td>
+                        <td>{{ cols[4].strip() }}</td>
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>Нет данных для отображения отчёта.</p>
+        {% endif %}
+    {% endif %}
+
+    <form method="post" action="/save_report">
+        <button type="submit" class="btn btn-primary mt-3">Сохранить отчёт</button>
+        <a href="/old_reports" class="btn btn-secondary mt-3 ms-2">Старые отчёты</a>
+        <a href="/change_password" class="btn btn-warning mt-3 ms-2">Сменить пароль</a>
+        <a href="/logout" class="btn btn-danger mt-3 ms-2">Выйти</a>
+    </form>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
